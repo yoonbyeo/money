@@ -44,4 +44,8 @@ class QuestionCard extends HTMLElement {
   }
 }
 
-customElements.define('question-card', QuestionCard);
+try {
+  customElements.define('question-card', QuestionCard);
+} catch (e) {
+  console.error("Error defining question-card:", e);
+}

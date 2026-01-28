@@ -60,28 +60,52 @@ img {
   z-index: -2;
 }
 
-.orb-1 {
+@keyframes orb-anim-1 {
+  0% { transform: translate(0, 0); }
+  30% { transform: translate(-20px, 30px); }
+  60% { transform: translate(10px, -10px); }
+  100% { transform: translate(0, 0); }
+}
+
+@keyframes orb-anim-2 {
+  0% { transform: translate(0, 0); }
+  40% { transform: translate(30px, -20px); }
+  70% { transform: translate(-10px, 10px); }
+  100% { transform: translate(0, 0); }
+}
+
+@keyframes orb-anim-3 {
+  0% { transform: translate(0, 0); }
+  50% { transform: translate(-15px, -15px); }
+  80% { transform: translate(5px, 20px); }
+  100% { transform: translate(0, 0); }
+}
+
+.bg-orb.orb-1 {
   width: 420px;
   height: 420px;
   background: radial-gradient(circle, rgba(239, 111, 59, 0.35), rgba(239, 111, 59, 0));
   top: -120px;
   right: -80px;
+  animation: orb-anim-1 15s ease-in-out infinite alternate;
 }
 
-.orb-2 {
+.bg-orb.orb-2 {
   width: 360px;
   height: 360px;
   background: radial-gradient(circle, rgba(29, 107, 107, 0.3), rgba(29, 107, 107, 0));
   bottom: 10%;
   left: -120px;
+  animation: orb-anim-2 18s ease-in-out infinite alternate-reverse;
 }
 
-.orb-3 {
+.bg-orb.orb-3 {
   width: 240px;
   height: 240px;
   background: radial-gradient(circle, rgba(239, 111, 59, 0.2), rgba(239, 111, 59, 0));
   top: 35%;
   left: 45%;
+  animation: orb-anim-3 12s ease-in-out infinite alternate;
 }
 
 .site-header {

@@ -107,4 +107,8 @@ class ResultChart extends HTMLElement {
   }
 }
 
-customElements.define('result-chart', ResultChart);
+try {
+  customElements.define('result-chart', ResultChart);
+} catch (e) {
+  console.error("Error defining result-chart:", e);
+}

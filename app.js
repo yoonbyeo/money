@@ -199,7 +199,7 @@ function renderResult(scores) {
         <div class="highlight-body">${info.tips}</div>
       </div>
     </div>
-    <div class="axis-grid">${axisCards}</div>
+
     <div class="result-grid">
       <div class="result-panel">
         <h4>잘 맞는 유형</h4>
@@ -240,5 +240,12 @@ resetButton.addEventListener('click', () => {
   renderCards();
 });
 
-// Initial render
-renderCards();
+window.addEventListener('DOMContentLoaded', () => {
+  window.customElements.whenDefined('question-card').then(() => {
+    try {
+      renderCards();
+    } catch (e) {
+      console.error("Error during initial renderCards():", e);
+    }
+  });
+});

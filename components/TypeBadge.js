@@ -42,4 +42,8 @@ class TypeBadge extends HTMLElement {
   }
 }
 
-customElements.define('type-badge', TypeBadge);
+try {
+  customElements.define('type-badge', TypeBadge);
+} catch (e) {
+  console.error("Error defining type-badge:", e);
+}
