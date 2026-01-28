@@ -9,6 +9,9 @@
 </head>
 <body>
   <div class="bg-noise"></div>
+  <div class="bg-orb orb-1"></div>
+  <div class="bg-orb orb-2"></div>
+  <div class="bg-orb orb-3"></div>
   <header class="site-header">
     <div class="container header-inner">
       <a class="logo" href="#top">TYPELAB</a>
@@ -27,7 +30,7 @@
       <div class="container hero-grid">
         <div>
           <p class="eyebrow">종합 유형검사 플랫폼</p>
-          <h1>당신의 선택을 통해<br>나만의 성향 지도를 그려요.</h1>
+          <h1>당신의 선택이 모여<br>나만의 성향 지도를 완성합니다.</h1>
           <p class="lead">
             TYPELAB은 일상 행동과 상황에 기반한 질문으로 구성된 검사들을 제공합니다.
             결과는 참고용이며, 자기이해와 대화를 돕는 도구로 활용해 주세요.
@@ -50,6 +53,20 @@
             <li>나만의 유형과 경향 요약 확인</li>
           </ol>
           <div class="card-footer">검사 시간 약 6~8분</div>
+          <div class="hero-metrics">
+            <div>
+              <span class="metric-value">6</span>
+              <span class="metric-label">페이지</span>
+            </div>
+            <div>
+              <span class="metric-value">10</span>
+              <span class="metric-label">문항/페이지</span>
+            </div>
+            <div>
+              <span class="metric-value">4</span>
+              <span class="metric-label">성향 축</span>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -91,14 +108,21 @@
           <strong>안내</strong>
           <span>이 검사는 자기이해를 돕는 참고용이며, 임상적 진단이나 평가를 제공하지 않습니다.</span>
         </div>
-        <div class="controls">
-          <button id="startTest" class="btn primary">문항 펼치기</button>
+        <div class="test-toolbar">
+          <button id="startTest" class="btn primary">검사 시작</button>
           <div class="progress" aria-live="polite">
             <span id="progressCount">0</span>/60 문항 응답
+          </div>
+          <div class="page-indicator" aria-live="polite">
+            페이지 <span id="pageIndex">1</span>/6
           </div>
         </div>
         <div id="formMessage" class="form-message" aria-live="polite"></div>
         <form id="mbtiForm" class="question-list" aria-live="polite"></form>
+        <div class="pager">
+          <button id="prevPage" class="btn ghost" type="button">이전 10문항</button>
+          <button id="nextPage" class="btn ghost" type="button">다음 10문항</button>
+        </div>
         <div class="actions">
           <button id="submitTest" class="btn primary" type="button">결과 보기</button>
           <button id="resetTest" class="btn ghost" type="button">다시 시작</button>

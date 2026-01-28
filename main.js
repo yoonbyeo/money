@@ -69,21 +69,35 @@ const ANSWERS = [
   { label: '매우 그렇지 않다', value: -2 }
 ];
 
+const PAGE_SIZE = 10;
+const TOTAL_PAGES = Math.ceil(QUESTIONS.length / PAGE_SIZE);
+
 const form = document.getElementById('mbtiForm');
 const startButton = document.getElementById('startTest');
 const submitButton = document.getElementById('submitTest');
 const resetButton = document.getElementById('resetTest');
+const prevButton = document.getElementById('prevPage');
+const nextButton = document.getElementById('nextPage');
 const resultBox = document.getElementById('result');
 const progressCount = document.getElementById('progressCount');
+const pageIndex = document.getElementById('pageIndex');
 const formMessage = document.getElementById('formMessage');
 
 let rendered = false;
+let currentPage = 1;
+const responses = {};
 
-function renderQuestions() {
-  if (rendered) return;
+function pageSlice(page) {
+  const start = (page - 1) * PAGE_SIZE;
+  return QUESTIONS.slice(start, start + PAGE_SIZE);
+}
+
+function renderQuestions(page) {
+  if (!rendered) rendered = true;
+  form.innerHTML = '';
   const fragment = document.createDocumentFragment();
 
-  QUESTIONS.forEach((item) => {
+  pageSlice(page).forEach((item) => {
     const wrapper = document.createElement('div');
     wrapper.className = 'question';
 
@@ -114,6 +128,11 @@ function renderQuestions() {
       input.setAttribute('data-dimension', item.dimension);
       input.setAttribute('data-direction', item.direction);
 
+      const saved = responses[item.id];
+      if (saved === answer.value) {
+        input.checked = true;
+      }
+
       const span = document.createElement('span');
       span.textContent = answer.label;
 
@@ -126,13 +145,19 @@ function renderQuestions() {
   });
 
   form.append(fragment);
-  rendered = true;
   updateProgress();
+  updatePager();
 }
 
 function updateProgress() {
-  const checked = form.querySelectorAll('input[type="radio"]:checked').length;
-  progressCount.textContent = String(checked);
+  const answered = Object.keys(responses).length;
+  progressCount.textContent = String(answered);
+}
+
+function updatePager() {
+  pageIndex.textContent = String(currentPage);
+  prevButton.disabled = currentPage === 1;
+  nextButton.disabled = currentPage === TOTAL_PAGES;
 }
 
 function calculateScores() {
@@ -143,12 +168,10 @@ function calculateScores() {
     JP: { J: 0, P: 0 }
   };
 
-  const answered = form.querySelectorAll('input[type="radio"]:checked');
-  answered.forEach((input) => {
-    const dimension = input.getAttribute('data-dimension');
-    const direction = input.getAttribute('data-direction');
-    const value = Number(input.value);
-    scores[dimension][direction] += value;
+  QUESTIONS.forEach((item) => {
+    const value = responses[item.id];
+    if (value === undefined) return;
+    scores[item.dimension][item.direction] += value;
   });
 
   return scores;
@@ -224,14 +247,19 @@ function renderResult(scores) {
 }
 
 function validateAnswers() {
-  const missing = QUESTIONS.filter((item) => !form.querySelector(`input[name="q${item.id}"]:checked`));
+  const missing = QUESTIONS.filter((item) => responses[item.id] === undefined);
   if (missing.length === 0) {
     formMessage.textContent = '';
     return true;
   }
 
   const firstMissing = missing[0];
+  const targetPage = Math.ceil(firstMissing.id / PAGE_SIZE);
   formMessage.textContent = `응답하지 않은 문항이 ${missing.length}개 있어요. Q${firstMissing.id}부터 확인해 주세요.`;
+  if (currentPage !== targetPage) {
+    currentPage = targetPage;
+    renderQuestions(currentPage);
+  }
   const target = form.querySelector(`input[name="q${firstMissing.id}"]`);
   if (target) {
     target.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -240,17 +268,36 @@ function validateAnswers() {
 }
 
 startButton.addEventListener('click', () => {
-  renderQuestions();
+  currentPage = 1;
+  renderQuestions(currentPage);
   form.scrollIntoView({ behavior: 'smooth', block: 'start' });
 });
 
-form.addEventListener('change', () => {
+form.addEventListener('change', (event) => {
+  if (!(event.target instanceof HTMLInputElement)) return;
+  const id = Number(event.target.name.replace('q', ''));
+  responses[id] = Number(event.target.value);
   updateProgress();
+});
+
+prevButton.addEventListener('click', () => {
+  if (currentPage === 1) return;
+  currentPage -= 1;
+  renderQuestions(currentPage);
+  form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
+
+nextButton.addEventListener('click', () => {
+  if (currentPage === TOTAL_PAGES) return;
+  currentPage += 1;
+  renderQuestions(currentPage);
+  form.scrollIntoView({ behavior: 'smooth', block: 'start' });
 });
 
 submitButton.addEventListener('click', () => {
   if (!rendered) {
-    renderQuestions();
+    currentPage = 1;
+    renderQuestions(currentPage);
   }
   if (!validateAnswers()) return;
 
@@ -259,10 +306,13 @@ submitButton.addEventListener('click', () => {
 });
 
 resetButton.addEventListener('click', () => {
-  form.reset();
+  Object.keys(responses).forEach((key) => {
+    delete responses[Number(key)];
+  });
   formMessage.textContent = '';
   resultBox.classList.remove('active');
   resultBox.innerHTML = '';
-  updateProgress();
+  currentPage = 1;
+  renderQuestions(currentPage);
   form.scrollIntoView({ behavior: 'smooth', block: 'start' });
 });
