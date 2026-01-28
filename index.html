@@ -102,22 +102,27 @@
       <div class="container">
         <div class="section-title">
           <h2>MBTI 기본 유형검사</h2>
-          <p>카드를 좌우로 스와이프하여 당신의 성향을 알려주세요.</p>
-        </div>
-        <div class="test-container">
-          <div id="cardStack" class="card-stack">
-            <!-- Question cards will be injected here -->
-          </div>
-          <div class="swipe-indicators">
-            <div class="indicator left">그렇지 않다</div>
-            <div class="indicator right">그렇다</div>
-          </div>
+          <p>아래 60문항에 대해 현재 나의 평소 행동에 가장 가까운 답을 선택하세요.</p>
         </div>
         <div class="test-toolbar">
+          <button id="startTest" class="btn primary">검사 시작</button>
           <div class="progress" aria-live="polite">
             <span id="progressCount">0</span>/60 문항 응답
           </div>
+          <div class="page-indicator" aria-live="polite">
+            페이지 <span id="pageIndex">1</span>/6
+          </div>
           <button id="resetTest" class="btn ghost" type="button">다시 시작</button>
+        </div>
+        <div id="formMessage" class="form-message" aria-live="polite"></div>
+        <form id="mbtiForm" class="question-list" aria-live="polite"></form>
+        <div class="pager">
+          <button id="prevPage" class="btn ghost" type="button">이전 10문항</button>
+          <button id="nextPage" class="btn ghost" type="button">다음 10문항</button>
+        </div>
+        <div class="actions">
+          <button id="submitTest" class="btn primary" type="button">결과 보기</button>
+          <button id="resetTestBottom" class="btn ghost" type="button">다시 시작</button>
         </div>
         <div id="result" class="result" aria-live="polite"></div>
       </div>
@@ -199,7 +204,6 @@
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-  <script defer type="module" src="/components/QuestionCard.js"></script>
   <script defer type="module" src="/app.js"></script>
 </body>
 </html>

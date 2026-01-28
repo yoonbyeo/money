@@ -2,122 +2,99 @@ import QUESTIONS from './data/questions.js';
 import ANSWERS from './data/answers.js';
 import { TYPE_INFO, COMPATIBILITY, CAREERS } from './data/results.js';
 
-// Ensure the custom elements are defined
-import '../components/QuestionCard.js';
-import '../components/ResultChart.js';
-import '../components/TypeBadge.js';
+import './components/ResultChart.js';
+import './components/TypeBadge.js';
 
-const TOTAL_QUESTIONS = QUESTIONS.length;
-const cardStack = document.getElementById('cardStack');
+const PAGE_SIZE = 10;
+const TOTAL_PAGES = Math.ceil(QUESTIONS.length / PAGE_SIZE);
+
+const form = document.getElementById('mbtiForm');
+const startButton = document.getElementById('startTest');
+const submitButton = document.getElementById('submitTest');
 const resetButton = document.getElementById('resetTest');
+const resetButtonBottom = document.getElementById('resetTestBottom');
+const prevButton = document.getElementById('prevPage');
+const nextButton = document.getElementById('nextPage');
 const resultBox = document.getElementById('result');
 const progressCount = document.getElementById('progressCount');
-const swipeIndicators = document.querySelector('.swipe-indicators');
-const leftIndicator = document.querySelector('.indicator.left');
-const rightIndicator = document.querySelector('.indicator.right');
+const pageIndex = document.getElementById('pageIndex');
+const formMessage = document.getElementById('formMessage');
 
-let currentQuestionIndex = 0;
+let rendered = false;
+let currentPage = 1;
 const responses = {};
-let isSwiping = false;
-let startX = 0;
-let currentX = 0;
 
-function renderCards() {
-  cardStack.innerHTML = ''; // Clear existing cards
-  for (let i = 0; i < TOTAL_QUESTIONS; i++) {
-    const questionData = QUESTIONS[i];
-    const questionCard = document.createElement('question-card');
-    questionCard.setAttribute('question-id', questionData.id);
-    questionCard.setAttribute('question', questionData.question);
-    questionCard.style.zIndex = TOTAL_QUESTIONS - i; // Stack cards
-    questionCard.style.transform = `translateY(${i * 10}px) scale(${1 - i * 0.05})`; // Visual stacking
-    questionCard.setAttribute('data-dimension', questionData.dimension);
-    questionCard.setAttribute('data-direction', questionData.direction);
-    cardStack.appendChild(questionCard);
-  }
-  attachSwipeListeners();
-  updateProgress();
+function pageSlice(page) {
+  const start = (page - 1) * PAGE_SIZE;
+  return QUESTIONS.slice(start, start + PAGE_SIZE);
 }
 
-function attachSwipeListeners() {
-  const cards = cardStack.querySelectorAll('question-card');
-  if (cards.length === 0) return;
+function renderQuestions(page) {
+  if (!rendered) rendered = true;
+  form.innerHTML = '';
+  const fragment = document.createDocumentFragment();
 
-  const topCard = cards[cards.length - 1]; // The card on top
+  pageSlice(page).forEach((item) => {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'question';
 
-  topCard.addEventListener('pointerdown', (e) => {
-    isSwiping = true;
-    startX = e.clientX || e.touches[0].clientX;
-    topCard.style.transition = 'none'; // Disable transition for smooth dragging
-    swipeIndicators.classList.add('active');
+    const header = document.createElement('div');
+    header.className = 'question-header';
+
+    const number = document.createElement('div');
+    number.className = 'question-number';
+    number.textContent = `Q${item.id}`;
+
+    const text = document.createElement('div');
+    text.className = 'question-text';
+    text.textContent = item.question;
+
+    header.append(number, text);
+
+    const options = document.createElement('div');
+    options.className = 'options';
+
+    ANSWERS.forEach((answer) => {
+      const label = document.createElement('label');
+      label.className = 'option';
+
+      const input = document.createElement('input');
+      input.type = 'radio';
+      input.name = `q${item.id}`;
+      input.value = answer.value;
+      input.setAttribute('data-dimension', item.dimension);
+      input.setAttribute('data-direction', item.direction);
+
+      const saved = responses[item.id];
+      if (saved === answer.value) {
+        input.checked = true;
+      }
+
+      const span = document.createElement('span');
+      span.textContent = answer.label;
+
+      label.append(input, span);
+      options.append(label);
+    });
+
+    wrapper.append(header, options);
+    fragment.append(wrapper);
   });
 
-  topCard.addEventListener('pointermove', (e) => {
-    if (!isSwiping) return;
-    currentX = e.clientX || e.touches[0].clientX;
-    const diffX = currentX - startX;
-
-    topCard.style.transform = `translateX(${diffX}px) rotate(${diffX / 20}deg)`;
-
-    // Update indicator opacity based on swipe distance
-    const opacity = Math.min(1, Math.abs(diffX) / 100);
-    if (diffX < 0) { // Swiping left (No)
-      leftIndicator.style.opacity = opacity;
-      rightIndicator.style.opacity = 0;
-    } else { // Swiping right (Yes)
-      rightIndicator.style.opacity = opacity;
-      leftIndicator.style.opacity = 0;
-    }
-  });
-
-  topCard.addEventListener('pointerup', (e) => {
-    if (!isSwiping) return;
-    isSwiping = false;
-    topCard.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
-    swipeIndicators.classList.remove('active');
-    leftIndicator.style.opacity = 0;
-    rightIndicator.style.opacity = 0;
-
-    const diffX = currentX - startX;
-    if (Math.abs(diffX) > 100) { // Threshold for a successful swipe
-      const questionId = parseInt(topCard.getAttribute('question-id'));
-      const dimension = topCard.getAttribute('data-dimension');
-      const direction = topCard.getAttribute('data-direction');
-
-      const answerValue = diffX < 0 ? -2 : 2; // -2 for No, 2 for Yes (simplified)
-      responses[questionId] = { value: answerValue, dimension, direction };
-      
-      topCard.style.transform = `translateX(${diffX * 3}px) rotate(${diffX / 10}deg)`;
-      topCard.style.opacity = 0;
-      topCard.addEventListener('transitionend', () => {
-        topCard.remove();
-        currentQuestionIndex++;
-        updateProgress();
-        if (currentQuestionIndex < TOTAL_QUESTIONS) {
-          attachSwipeListeners(); // Attach listeners to the new top card
-        } else {
-          // All questions answered, show result
-          showResult();
-        }
-      }, { once: true });
-    } else {
-      // Snap back if not swiped far enough
-      topCard.style.transform = '';
-    }
-  });
-
-  topCard.addEventListener('pointercancel', () => {
-    isSwiping = false;
-    topCard.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
-    topCard.style.transform = '';
-    swipeIndicators.classList.remove('active');
-    leftIndicator.style.opacity = 0;
-    rightIndicator.style.opacity = 0;
-  });
+  form.append(fragment);
+  updateProgress();
+  updatePager();
 }
 
 function updateProgress() {
-  progressCount.textContent = String(currentQuestionIndex);
+  const answered = Object.keys(responses).length;
+  progressCount.textContent = String(answered);
+}
+
+function updatePager() {
+  pageIndex.textContent = String(currentPage);
+  prevButton.disabled = currentPage === 1;
+  nextButton.disabled = currentPage === TOTAL_PAGES;
 }
 
 function calculateScores() {
@@ -128,15 +105,17 @@ function calculateScores() {
     JP: { J: 0, P: 0 }
   };
 
-  Object.values(responses).forEach(response => {
-    scores[response.dimension][response.direction] += response.value;
+  QUESTIONS.forEach((item) => {
+    const value = responses[item.id];
+    if (value === undefined) return;
+    scores[item.dimension][item.direction] += value;
   });
 
   return scores;
 }
 
 function determineType(scores) {
-  const maxDiff = 30; // Max possible difference for a dimension
+  const maxDiff = 30;
 
   const pairs = [
     { dimension: 'EI', left: 'E', right: 'I', label: '에너지 방향' },
@@ -199,7 +178,6 @@ function renderResult(scores) {
     <div class="result-chart">
       <result-chart breakdown='${JSON.stringify(breakdown)}'></result-chart>
     </div>
-
     <div class="result-grid">
       <div class="result-panel">
         <h4>잘 맞는 유형</h4>
@@ -225,27 +203,80 @@ function renderResult(scores) {
   resultBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-function showResult() {
-  const scores = calculateScores();
-  renderResult(scores);
+function validateAnswers() {
+  const missing = QUESTIONS.filter((item) => responses[item.id] === undefined);
+  if (missing.length === 0) {
+    formMessage.textContent = '';
+    return true;
+  }
+
+  const firstMissing = missing[0];
+  const targetPage = Math.ceil(firstMissing.id / PAGE_SIZE);
+  formMessage.textContent = `응답하지 않은 문항이 ${missing.length}개 있어요. Q${firstMissing.id}부터 확인해 주세요.`;
+  if (currentPage !== targetPage) {
+    currentPage = targetPage;
+    renderQuestions(currentPage);
+  }
+  const target = form.querySelector(`input[name="q${firstMissing.id}"]`);
+  if (target) {
+    target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+  return false;
 }
 
-resetButton.addEventListener('click', () => {
-  currentQuestionIndex = 0;
-  for (const key in responses) {
-    delete responses[key];
-  }
-  resultBox.classList.remove('active');
-  resultBox.innerHTML = '';
-  renderCards();
+startButton.addEventListener('click', () => {
+  currentPage = 1;
+  renderQuestions(currentPage);
+  form.scrollIntoView({ behavior: 'smooth', block: 'start' });
 });
 
-window.addEventListener('DOMContentLoaded', () => {
-  window.customElements.whenDefined('question-card').then(() => {
-    try {
-      renderCards();
-    } catch (e) {
-      console.error("Error during initial renderCards():", e);
-    }
+form.addEventListener('change', (event) => {
+  if (!(event.target instanceof HTMLInputElement)) return;
+  const id = Number(event.target.name.replace('q', ''));
+  responses[id] = Number(event.target.value);
+  updateProgress();
+});
+
+prevButton.addEventListener('click', () => {
+  if (currentPage === 1) return;
+  currentPage -= 1;
+  renderQuestions(currentPage);
+  form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
+
+nextButton.addEventListener('click', () => {
+  if (currentPage === TOTAL_PAGES) return;
+  currentPage += 1;
+  renderQuestions(currentPage);
+  form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
+
+submitButton.addEventListener('click', () => {
+  if (!rendered) {
+    currentPage = 1;
+    renderQuestions(currentPage);
+  }
+  if (!validateAnswers()) return;
+
+  const scores = calculateScores();
+  renderResult(scores);
+});
+
+function resetTest() {
+  Object.keys(responses).forEach((key) => {
+    delete responses[Number(key)];
   });
+  formMessage.textContent = '';
+  resultBox.classList.remove('active');
+  resultBox.innerHTML = '';
+  currentPage = 1;
+  renderQuestions(currentPage);
+  form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+resetButton.addEventListener('click', resetTest);
+resetButtonBottom.addEventListener('click', resetTest);
+
+window.addEventListener('DOMContentLoaded', () => {
+  renderQuestions(1);
 });
