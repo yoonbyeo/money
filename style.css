@@ -671,3 +671,68 @@ h1 {
     grid-template-columns: 1fr;
   }
 }
+
+.test-container {
+  position: relative;
+  width: min(450px, 90vw);
+  height: 300px; /* Adjust height as needed */
+  margin: 40px auto;
+}
+
+.card-stack {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+question-card {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  transform-origin: 50% 100%;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+question-card:nth-last-child(2) {
+  transform: translateY(10px) scale(0.95);
+  opacity: 0.8;
+}
+
+question-card:nth-last-child(3) {
+  transform: translateY(20px) scale(0.9);
+  opacity: 0.6;
+}
+
+.swipe-indicators {
+  display: flex;
+  justify-content: space-between;
+  position: absolute;
+  bottom: -40px; /* Adjust as needed */
+  width: 100%;
+  font-size: 0.9em;
+  color: var(--ink-soft);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.swipe-indicators.active {
+  opacity: 1;
+}
+
+.swipe-indicators .indicator {
+  padding: 5px 10px;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+.swipe-indicators .indicator.left {
+  background: rgba(239, 111, 59, 0.1);
+  color: var(--accent);
+}
+
+.swipe-indicators .indicator.right {
+  background: rgba(29, 107, 107, 0.1);
+  color: var(--teal);
+}
