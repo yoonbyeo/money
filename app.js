@@ -180,9 +180,6 @@ function renderResult(scores) {
   const matches = COMPATIBILITY[type] || [];
   const careers = CAREERS[type] || [];
 
-    <result-chart breakdown='${JSON.stringify(breakdown)}'></result-chart>
-
-
   resultBox.innerHTML = `
     <div class="result-hero">
       <div>
@@ -198,6 +195,9 @@ function renderResult(scores) {
         <div class="highlight-label">성향 요약</div>
         <div class="highlight-body">${info.tips}</div>
       </div>
+    </div>
+    <div class="result-chart">
+      <result-chart breakdown='${JSON.stringify(breakdown)}'></result-chart>
     </div>
 
     <div class="result-grid">
