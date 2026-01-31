@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>나의 연애 가치관 테스트</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app">
+        <header>
+            <h1>나의 연애 가치관은?</h1>
+        </header>
+        <main>
+            <div id="start-screen" class="fade-in">
+                <h2>연애에 대한 당신의 진짜 가치관을 알아보세요!</h2>
+                <button id="start-btn">테스트 시작하기</button>
+            </div>
+            <div id="question-screen" class="hidden">
+                <div id="progress-bar-container">
+                    <div id="progress-bar"></div>
+                </div>
+                <!-- 질문이 여기에 표시됩니다 -->
+            </div>
+            <div id="result-screen" class="hidden">
+                <!-- 결과가 여기에 표시됩니다 -->
+            </div>
+        </main>
+        <footer>
+            <a href="about.html" target="_blank">About</a>
+            <a href="terms.html" target="_blank">이용약관</a>
+            <a href="privacy.html" target="_blank">개인정보처리방침</a>
+        </footer>
+    </div>
+    <script src="dating/dating-questions.js"></script>
+    <script src="dating/dating-results.js"></script>
+    <script src="dating/dating-app.js"></script>
+</body>
+</html>

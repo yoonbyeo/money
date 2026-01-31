@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MBTI 유형 검사</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app">
+        <header>
+            <h1>16가지 성격 유형 테스트</h1>
+        </header>
+        <main>
+            <div id="start-screen" class="fade-in">
+                <h2>나는 어떤 사람일까?<br>무료로 나의 성격 유형을 알아보세요!</h2>
+                <button id="start-btn">테스트 시작하기</button>
+            </div>
+            <div id="question-screen" class="hidden">
+                <div id="progress-bar-container">
+                    <div id="progress-bar"></div>
+                </div>
+                <!-- 질문이 여기에 표시됩니다 -->
+            </div>
+            <div id="result-screen" class="hidden">
+                <!-- 결과가 여기에 표시됩니다 -->
+            </div>
+        </main>
+        <footer>
+            <a href="about.html" target="_blank">About</a>
+            <a href="terms.html" target="_blank">이용약관</a>
+            <a href="privacy.html" target="_blank">개인정보처리방침</a>
+        </footer>
+    </div>
+    <script src="mbti/mbti-questions.js"></script>
+    <script src="mbti/mbti-results.js"></script>
+    <script src="mbti/mbti-app.js"></script>
+</body>
+</html>
