@@ -1,209 +1,39 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>종합 유형검사 | MBTI 기본 유형검사</title>
-  <meta name="description" content="일상 행동 기반 질문으로 구성된 MBTI 기본 유형검사와 다양한 유형검사를 제공하는 종합 유형검사 사이트." />
-  <link rel="stylesheet" href="/style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>유형 검사 사이트</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="bg-noise"></div>
-  <div class="bg-orb orb-1"></div>
-  <div class="bg-orb orb-2"></div>
-  <div class="bg-orb orb-3"></div>
-  <header class="site-header">
-    <div class="container header-inner">
-      <a class="logo" href="#top">TYPELAB</a>
-      <nav class="nav">
-        <a href="#tests">검사 목록</a>
-        <a href="#mbti">MBTI 검사</a>
-        <a href="#about">사이트 소개</a>
-        <a href="/policy.html">정책</a>
-      </nav>
-      <a class="cta" href="#mbti">검사 시작</a>
+    <div id="app">
+        <header>
+            <h1>16가지 성격 유형 테스트</h1>
+        </header>
+        <main>
+            <div id="start-screen" class="fade-in">
+                <h2>나는 어떤 사람일까?<br>무료로 나의 성격 유형을 알아보세요!</h2>
+                <button id="start-btn">테스트 시작하기</button>
+            </div>
+            <div id="question-screen" class="hidden">
+                <div id="progress-bar-container">
+                    <div id="progress-bar"></div>
+                </div>
+                <!-- 질문이 여기에 표시됩니다 -->
+            </div>
+            <div id="result-screen" class="hidden">
+                <!-- 결과가 여기에 표시됩니다 -->
+            </div>
+        </main>
+        <footer>
+            <a href="about.html" target="_blank">About</a>
+            <a href="terms.html" target="_blank">이용약관</a>
+            <a href="privacy.html" target="_blank">개인정보처리방침</a>
+        </footer>
     </div>
-  </header>
-
-  <main id="top">
-    <section class="hero">
-      <div class="container hero-grid">
-        <div>
-          <p class="eyebrow">종합 유형검사 플랫폼</p>
-          <h1>당신의 선택이 모여<br>나만의 성향 지도를 완성합니다.</h1>
-          <p class="lead">
-            TYPELAB은 일상 행동과 상황에 기반한 질문으로 구성된 검사들을 제공합니다.
-            결과는 참고용이며, 자기이해와 대화를 돕는 도구로 활용해 주세요.
-          </p>
-          <div class="hero-actions">
-            <a class="btn primary" href="#mbti">MBTI 기본 유형검사</a>
-            <a class="btn ghost" href="#tests">다른 검사 보기</a>
-          </div>
-          <ul class="hero-points">
-            <li>60문항 · 5점 척도</li>
-            <li>모바일과 데스크톱 최적화</li>
-            <li>데이터 저장 없음</li>
-          </ul>
-        </div>
-        <div class="hero-card">
-          <div class="card-title">검사 흐름</div>
-          <ol>
-            <li>일상 상황에 대한 질문에 응답</li>
-            <li>4개 축(EI, SN, TF, JP) 점수 계산</li>
-            <li>나만의 유형과 경향 요약 확인</li>
-          </ol>
-          <div class="card-footer">검사 시간 약 6~8분</div>
-          <div class="hero-metrics">
-            <div>
-              <span class="metric-value">6</span>
-              <span class="metric-label">페이지</span>
-            </div>
-            <div>
-              <span class="metric-value">10</span>
-              <span class="metric-label">문항/페이지</span>
-            </div>
-            <div>
-              <span class="metric-value">4</span>
-              <span class="metric-label">성향 축</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="tests" class="tests">
-      <div class="container">
-        <div class="section-title">
-          <h2>검사 목록</h2>
-          <p>앞으로 다양한 유형검사가 추가될 예정입니다.</p>
-        </div>
-        <div class="test-grid">
-          <article class="test-card live">
-            <div class="tag">진행 가능</div>
-            <h3>MBTI 기본 유형검사</h3>
-            <p>행동·상황 중심 60문항으로 4개 축의 선호 경향을 확인합니다.</p>
-            <a class="btn small" href="#mbti">검사 시작</a>
-          </article>
-          <article class="test-card">
-            <div class="tag muted">준비 중</div>
-            <h3>학습 몰입 스타일 검사</h3>
-            <p>집중 환경과 동기 요인을 파악하는 검사(예정).</p>
-          </article>
-          <article class="test-card">
-            <div class="tag muted">준비 중</div>
-            <h3>커뮤니케이션 리듬 검사</h3>
-            <p>대화 방식과 피드백 습관을 살펴보는 검사(예정).</p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section id="mbti" class="mbti">
-      <div class="container">
-        <div class="section-title">
-          <h2>MBTI 기본 유형검사</h2>
-          <p>아래 60문항에 대해 현재 나의 평소 행동에 가장 가까운 답을 선택하세요.</p>
-        </div>
-        <div class="test-toolbar">
-          <button id="startTest" class="btn primary">검사 시작</button>
-          <div class="progress" aria-live="polite">
-            <span id="progressCount">0</span>/60 문항 응답
-          </div>
-          <div class="page-indicator" aria-live="polite">
-            페이지 <span id="pageIndex">1</span>/6
-          </div>
-          <button id="resetTest" class="btn ghost" type="button">다시 시작</button>
-        </div>
-        <div id="formMessage" class="form-message" aria-live="polite"></div>
-        <form id="mbtiForm" class="question-list" aria-live="polite"></form>
-        <div class="pager">
-          <button id="prevPage" class="btn ghost" type="button">이전 10문항</button>
-          <button id="nextPage" class="btn ghost" type="button">다음 10문항</button>
-        </div>
-        <div class="actions">
-          <button id="submitTest" class="btn primary" type="button">결과 보기</button>
-          <button id="resetTestBottom" class="btn ghost" type="button">다시 시작</button>
-        </div>
-        <div id="result" class="result" aria-live="polite"></div>
-      </div>
-    </section>
-
-    <section id="about" class="about">
-      <div class="container">
-        <div class="section-title">
-          <h2>사이트 소개</h2>
-          <p>TYPELAB은 다양한 유형검사를 한 곳에서 경험할 수 있도록 설계된 플랫폼입니다.</p>
-        </div>
-        <div class="about-grid">
-          <div class="about-card">
-            <h3>행동 기반 질문</h3>
-            <p>자기평가형 문장을 최소화하고, 실제 행동과 상황을 묻는 문항을 제공합니다.</p>
-          </div>
-          <div class="about-card">
-            <h3>투명한 결과</h3>
-            <p>각 축의 점수를 공개하며, 결과 해석에 필요한 힌트를 함께 제시합니다.</p>
-          </div>
-          <div class="about-card">
-            <h3>지속 업데이트</h3>
-            <p>새로운 검사와 리포트를 순차적으로 추가해 더 풍부한 경험을 제공합니다.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="policy" class="policy">
-      <div class="container">
-        <div class="section-title">
-          <h2>정책 안내</h2>
-          <p>광고 운영 및 사용자 보호를 위한 안내입니다.</p>
-        </div>
-        <div class="policy-grid">
-          <div>
-            <h3>개인정보 처리방침</h3>
-            <p>본 사이트는 테스트 응답을 저장하지 않으며, 점수 계산은 사용자의 기기에서만 이루어집니다.</p>
-            <p>로그인 기능을 제공하지 않으며, 이름·연락처 등 직접 식별 가능한 정보는 수집하지 않습니다.</p>
-          </div>
-          <div>
-            <h3>이용약관</h3>
-            <p>모든 결과는 참고용이며, 중요한 의사결정은 다양한 정보를 함께 고려해 주세요.</p>
-            <p>본 서비스는 자기이해를 돕는 콘텐츠로, 진단이나 전문 상담을 대체하지 않습니다.</p>
-          </div>
-          <div>
-            <h3>문의</h3>
-            <p>광고 및 제휴 문의: <span class="mono">contact@typelab.example</span></p>
-          </div>
-          <div>
-            <h3>광고 안내</h3>
-            <p>본 사이트는 Google AdSense를 포함한 광고 서비스를 사용할 수 있습니다.</p>
-            <p>Google은 쿠키를 사용해 사용자의 관심사에 기반한 광고를 제공할 수 있습니다.</p>
-            <p>맞춤 광고 설정은 <a class="mono" href="https://adssettings.google.com">adssettings.google.com</a>에서 변경할 수 있습니다.</p>
-          </div>
-          <div>
-            <h3>콘텐츠 품질 원칙</h3>
-            <p>유사한 페이지를 반복 생성하지 않고, 독창적인 질문과 해설을 제공합니다.</p>
-            <p>사용자가 원하는 정보를 빠르게 찾을 수 있도록 탐색 구조를 단순하게 유지합니다.</p>
-            <p>제공하는 검사와 안내는 실제로 이용 가능한 서비스와 일치하도록 구성합니다.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer class="site-footer">
-    <div class="container footer-inner">
-      <div>
-        <div class="logo">TYPELAB</div>
-        <p>종합 유형검사 플랫폼 · 2026</p>
-      </div>
-      <div class="footer-links">
-        <a href="/privacy.html">개인정보 처리방침</a>
-        <a href="/terms.html">이용약관</a>
-        <a href="#mbti">MBTI 검사</a>
-      </div>
-    </div>
-  </footer>
-
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-  <script defer type="module" src="/app.js"></script>
+    <script src="data/questions.js"></script>
+    <script src="data/results.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
